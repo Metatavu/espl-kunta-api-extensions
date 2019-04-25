@@ -13,9 +13,9 @@
       }
 
       if (sizeof($burnWarnings) < 1) {
-        return '<iframe frameborder="0" height="1100" scrolling="no" src="https://www.webropolsurveys.com/S/1045CD621017B2E4.par" width="800"></iframe>'; //do_shortcode('[dcb name=risujenpoltto-sallittu]');
+        return '<iframe frameborder="0" height="1100" scrolling="no" src="https://www.webropolsurveys.com/S/1045CD621017B2E4.par" width="800"></iframe>';
       } else {
-        return '<p style="font-weight: bold;color:#ff0000;">Ilmoitusta risujen/puutarhajätteen poltosta ei voida tehdä voimassa olevan metsäpalovaroituksen vuoksi.</p>'; //do_shortcode('[dcb name=risujenpoltto-kielletty]');
+        return '<p style="font-weight: bold;color:#ff0000;">Ilmoitusta risujen/puutarhajätteen poltosta ei voida tehdä voimassa olevan metsäpalovaroituksen vuoksi.</p>';
       }
     }
   }
