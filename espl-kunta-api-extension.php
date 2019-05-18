@@ -3,7 +3,7 @@
  * Created on July 12, 2017
  * Plugin Name: Kunta API ESPL extensions
  * Description: Kunta API extensions for ESPL
- * Version: 0.5
+ * Version: 0.6
  * Author: Metatavu Oy
  */
   defined ( 'ABSPATH' ) || die ( 'No script kiddies please!' );
