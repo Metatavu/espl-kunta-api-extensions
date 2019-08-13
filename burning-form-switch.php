@@ -1,8 +1,37 @@
 <?php
 
   defined ( 'ABSPATH' ) || die ( 'No script kiddies please!' );
+  
+  function check_burn_form_pages() {
+    $burnFormVisible = is_burn_form_enabled();
+    $burnFormStatus = $burnFormVisible == true ? "visible" : "hidden";
+    $burnFormVisibility = get_option( "burn-form-visibility" );
 
-  function burn_form_shortcode_handler( $atts ){
+    if ( $burnFormStatus == $burnFormVisibility ) {
+      return;
+    }
+
+    $postslist = get_posts( array(
+      'post_type' => 'any',
+      'meta_query' => array(
+          array(
+              'key'   => 'burn-form-in-use',
+              'value' => 'true'
+          )
+      )
+    ));
+
+    foreach ( $postslist as $post ) {
+      error_log("Updating burn form visibility in post with id " . $post->ID);
+      wp_update_post( $post );
+    }
+
+    update_option("burn-form-visibility", $burnFormStatus);
+  }
+
+  add_action('burn-form-pages-check', 'check_burn_form_pages');
+
+  function is_burn_form_enabled() {
     $formEnabled = get_option( 'burn_form_enabled', 'false' );
     $showForm = true;
     if ($formEnabled == 'false') {
@@ -18,13 +47,21 @@
           $environmentalWarnings = \KuntaAPI\Core\Api::getEnvironmentalWarningsApi(false)->listOrganizationEnvironmentalWarnings($organizationId, 0, "forest-fire-weather,grass-fire-weather", $after, $before);
           $burnWarnings = array_merge($burnWarnings, $environmentalWarnings);
         }
-        
-        error_log(sizeof($burnWarnings));
+
         $showForm = sizeof($burnWarnings) < 1;
       }
     }
 
     if ($showForm) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function burn_form_shortcode_handler( $atts ){
+    update_post_meta( get_the_ID(), "burn-form-in-use", "true");
+    if (is_burn_form_enabled()) {
       return '<iframe frameborder="0" height="1100" scrolling="no" src="https://www.webropolsurveys.com/S/1045CD621017B2E4.par" width="800"></iframe>';
     } else {
       return '<p style="font-weight: bold;color:#ff0000;">Ilmoitusta risujen/puutarhajätteen poltosta ei voida tehdä voimassa olevan ruohikko- tai metsäpalovaroituksen vuoksi.</p>';
